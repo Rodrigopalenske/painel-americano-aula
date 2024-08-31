@@ -6,14 +6,15 @@ export default function PageExampleState() {
 
     const refContador = useRef(0)
     const [estado, setEstado] = useState(0);
-    // useCallback não permite usar o estado 
+    //Não usar function nomeFuncao() {} -> ao invés usar hooks-> iniciam com use...| como no exemplo abaixo:
+    // useCallback não permite usar o estado(se mantém o valor inicial)
     const submitForm = useCallback((e: SyntheticEvent) => { // cuidará do envio do formulário
         e.preventDefault(); // usa a configuração padrão, ao fazer submit do formulário ele não fará reload
         console.log('Enviou o Formulario')
         console.log(estado)
         console.log('refContador.current')
         console.log(refContador.current)
-    }, [estado]) // colocando o estado aqui diz para ele usar o valor atual do estado
+    }, [estado]) // colocando o estado aqui diz para a função usar o valor atualizado do estado
 
     return(
         <> {/* Permite colocar mais de uma tag */}

@@ -1,16 +1,25 @@
 
-import { SyntheticEvent, useCallback, useRef } from 'react'
+import { SyntheticEvent, useCallback, useRef, useState } from 'react'
 import styles from './styles.module.css' // style.module -> apenas funciona nessa página específica que seja chamada de style.
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Loading } from '../../components/Loading';
+import { Toast } from '../../components/Toast';
 
 export default function Login() {
 
+    const navigate = useNavigate() //usado para navegar entre as páginas
+
     const refForm = useRef<any>() //caso específico do uso do any, evitar ao máximo
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [isError, setIsError] = useState(false)
 
     const submitForm = useCallback((e: SyntheticEvent) => { // cuidará do envio do formulário
         e.preventDefault(); // usa a configuração padrão, ao fazer submit do formulário ele não fará reload
-        
         if (refForm.current.checkValidity()) {
-
+            setIsLoading(true)
             const target = e.target as typeof e.target & {
                 email: {value: string},
                 senha: {value: string}
@@ -18,15 +27,41 @@ export default function Login() {
 
             console.log(target.email.value)
             console.log(target.senha.value)
+            
+            // consumir rotas do BackEnd
+            axios.post("http://localhost:3001/login", // Promise deve ser usado o then e catch, código continua sem esperar a resposta
+                // Parâmetros enviados
+                {
+                    email: target.email.value,
+                    password: target.senha.value
+                }
+            ).then((res) => {
+                console.log(res.data)
+                navigate('/dashboard')
+            })
+            .catch((e) => {
+                console.log(e)
+                setIsLoading(false)
+                setIsError(true)
+            })
 
         } else {
-            refForm.current.classList.add('was-validated')
+            refForm.current.classList.add('was-validated') // Não permite a entrada de valores vazios
         }
 
     }, [])
 
     return(
         <> {/* Permite colocar mais de uma tag */}
+            <Loading
+                visible={isLoading}
+            />
+            <Toast
+                onClose={() => {setIsError(false)}}
+                show={isError}
+                message='Credenciais invalidas'
+                color='danger'
+            />
             <div className={styles.main}>
                 <div className={styles.border}>
                     <div className='d-flex flex-column align-items-center'>
