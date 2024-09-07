@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard'
 import Produto from './pages/Produto'
 import PageExampleState from './pages/PageExampleState'
 import Usuarios from './pages/Usuarios'
+import Voluntarios from './pages/Voluntarios'
 
 export const Rotas = () => {
     return (
@@ -27,6 +28,11 @@ export const Rotas = () => {
                 <Route
                     path='/usuarios'
                     element={<Usuarios />}
+                />
+
+                <Route
+                    path='/voluntarios'
+                    element={<Voluntarios />}
                 />
 
                 <Route

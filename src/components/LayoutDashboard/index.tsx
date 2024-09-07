@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import { Link } from "react-router-dom" // Link tag para navegar entre páginas(substitui "a" do html)
+import { excluiToken } from "../../services/token"
 
 interface IProps {
     children: ReactNode // tags e componets react, apenas colocando tags, já vai funcionar
@@ -31,7 +32,7 @@ export const LayoutDashboard = (props: IProps) => {
                 <div className="w-100"></div>
                 <div className="navbar-nav">
                     <div className="nav-item text-nowrap">
-                        <a className="nav-link px-3" href="#">Sair</a>
+                        <Link className="nav-link px-3" to="/" onClick={ excluiToken }>Sair</Link>
                     </div>
                 </div>
             </header>
@@ -58,6 +59,14 @@ export const LayoutDashboard = (props: IProps) => {
                                         to={'/usuarios'} // mesma função do href
                                     >
                                         Usuários
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link
+                                        className={`nav-link`}
+                                        to={'/voluntarios'} // mesma função do href
+                                    >
+                                        Voluntários
                                     </Link>
                                 </li>
                             </ul>
