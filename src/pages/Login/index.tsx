@@ -13,8 +13,7 @@ export default function Login() {
     const refForm = useRef<any>() //caso específico do uso do any, evitar ao máximo
 
     const [isLoading, setIsLoading] = useState(false)
-
-    const [isError, setIsError] = useState(false)
+    const [isToast, setIsToast] = useState(false)
 
     const submitForm = useCallback((e: SyntheticEvent) => { // cuidará do envio do formulário
         e.preventDefault(); // usa a configuração padrão, ao fazer submit do formulário ele não fará reload
@@ -37,12 +36,18 @@ export default function Login() {
                 }
             ).then((res) => {
                 console.log(res.data)
+                
+                // Salvar dados no local storage do navegador, 
+                // definimos uma chave(nome) e o que queremos salvar em forma de json, 
+                // no caso as informações do token e do usuário.
+                localStorage.setItem('americanos.token', JSON.stringify(res.data))
+
                 navigate('/dashboard')
             })
             .catch((e) => {
                 console.log(e)
                 setIsLoading(false)
-                setIsError(true)
+                setIsToast(true)
             })
 
         } else {
@@ -57,8 +62,8 @@ export default function Login() {
                 visible={isLoading}
             />
             <Toast
-                onClose={() => {setIsError(false)}}
-                show={isError}
+                onClose={() => { setIsToast(false) }}
+                show={isToast}
                 message='Credenciais invalidas'
                 color='danger'
             />
