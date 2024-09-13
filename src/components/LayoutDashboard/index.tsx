@@ -56,7 +56,7 @@ export const LayoutDashboard = (props: IProps) => {
                                 <li className="nav-item">
                                     <Link
                                         className={`nav-link`}
-                                        to={'/usuarios'} // mesma função do href
+                                        to={'/usuarios'}
                                     >
                                         Usuários
                                     </Link>
@@ -64,7 +64,7 @@ export const LayoutDashboard = (props: IProps) => {
                                 <li className="nav-item">
                                     <Link
                                         className={`nav-link`}
-                                        to={'/voluntarios'} // mesma função do href
+                                        to={'/voluntarios'}
                                     >
                                         Voluntários
                                     </Link>
