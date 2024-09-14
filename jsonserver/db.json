@@ -1,11 +1,19 @@
 {
-    "users": [
-        {
-        "id": 1,
-        "nome": "Admin",
-        "email": "admin@gmail.com",
-        "password": "$2a$10$Y4/4ws04wYotZQg2RB1bwurp7W6RCq.NLrUEEONlOZEdjLXCVG/LW",
-        "permissoes": "admin"
-        }
-    ]
+  "users": [
+    {
+      "id": 1,
+      "nome": "Admin",
+      "email": "admin@gmail.com",
+      "password": "$2a$10$Y4/4ws04wYotZQg2RB1bwurp7W6RCq.NLrUEEONlOZEdjLXCVG/LW",
+      "permissoes": "admin"
+    },
+    {
+      "email": "teste@gmail.com",
+      "password": "$2a$10$GQF1.F2q0OSx8Wn.45dah.nF3I6LGdYGd5Lx4KgBGEnw0DOKcfS5C",
+      "nome": "testeN",
+      "permissoes": "admin",
+      "email ": "",
+      "id": 2
+    }
+  ]
 }
