@@ -19,3 +19,21 @@ export const verificaTokenExpirado = (
 export const excluiToken = () => {
     localStorage.removeItem("americanos.token")
 }
+
+export const validaPermissao = (
+    permissao: Array<string>,
+    permissaoToken?: string
+) => {
+
+    if (permissaoToken) {
+
+        if (typeof permissaoToken === 'string') {
+            const temAltumaPermissao = permissao.includes(permissaoToken)
+
+            return temAltumaPermissao
+        }
+        return false
+    }
+    return false
+    
+}

@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { IToken } from "../../../interfaces/token"
-import { verificaTokenExpirado } from "../../../services/token"
-import { useNavigate } from "react-router-dom"
+import { validaPermissao, verificaTokenExpirado } from "../../../services/token"
+import { useNavigate, useParams } from "react-router-dom"
 import { LayoutDashboard } from "../../../components/LayoutDashboard"
 import { SubmitHandler, useForm } from "react-hook-form"
 import axios from "axios"
@@ -9,7 +9,7 @@ import axios from "axios"
 interface IForm {
     nome: string
     email: string
-    password: string
+    password?: string
     permissoes: string
 }
 
@@ -18,12 +18,19 @@ export default function GerenciarUsuarios() {
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        setValue,
     } = useForm<IForm>()
+
+    const refForm = useRef<any>()
 
     const navigate = useNavigate()
 
-    const refForm = useRef<any>()
+    const { id } = useParams(); // pega os parametros da url
+
+    const [isEdit, setIsEdit] = useState(false)
+
+    
 
     useEffect(() => { // Primeira função a ser executada sem ser chamada, quando o usuário chegar na página
         let lsToken = localStorage.getItem("americanos.token")
@@ -38,25 +45,63 @@ export default function GerenciarUsuarios() {
             navigate("/")
         }
 
+        if (!validaPermissao(['admin'], token?.user.permissoes))
+            {
+                navigate('/dashboard')
+            }
 
-    }, [])
+        const idUser = Number(id)
+        if (!isNaN(idUser)) {
+            setIsEdit(true)
+
+            axios.get('http://localhost:3001/users?id=' + idUser)
+                .then((res) => {
+                    setValue("nome", res.data[0].nome)
+                    setValue("email", res.data[0].email)
+                    setValue("permissoes", res.data[0].permissoes)
+
+                })
+        }
+
+    }, [id])
 
     const submitForm: SubmitHandler<IForm> = useCallback((data)=> {
+        if (isEdit) {
+            // Editando usuario
+        
 
-        axios.post('http://localhost:3001/users', data)
+            if (data.password?.trim() === '') {
+                delete data.password
+            }
+            
+            console.log(data)
+            console.log(id)
+
+            axios.put('http://localhost:3001/users/' + id, data)
+                .then((res) => {
+                    navigate('/usuarios')
+                })
+                .catch((e) => {
+                    console.log(e)
+                })
+
+        } else {
+            // Criando usuário
+            axios.post('http://localhost:3001/users', data)
             .then((res) => {
                 navigate('/usuarios')
             })
-            .catch((err) => {
-                console.log(err)
+            .catch((e) => {
+                console.log(e)
             })
+        }
 
-    }, [])
+    }, [isEdit])
 
     return(
         <>
             <LayoutDashboard>
-                <h1>Usuario</h1>
+                <h1>{isEdit ? 'Editar Usuario' : 'Adicionar Usuario'}</h1>
                 <form
                     className="row g-3 needs-validation mb-3"
                     noValidate
@@ -139,6 +184,9 @@ export default function GerenciarUsuarios() {
                             id="password" 
                             required
                             {...register('password', {required: 'Senha é obrigatório'})}
+
+                            //required={!isEdit}
+                            //{...register('password', {required: isEdit ? undefined : 'Senha é obrigatório'})}
                         />
                         <div className="invalid-feedback">
                             {errors.password && errors.password.message}

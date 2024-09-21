@@ -8,11 +8,10 @@
       "permissoes": "admin"
     },
     {
-      "email": "teste@gmail.com",
-      "password": "$2a$10$GQF1.F2q0OSx8Wn.45dah.nF3I6LGdYGd5Lx4KgBGEnw0DOKcfS5C",
-      "nome": "testeN",
-      "permissoes": "admin",
-      "email ": "",
+      "nome": "colaborador",
+      "email": "colaborador@gmail.com",
+      "permissoes": "colaborador",
+      "password": "$2a$10$03hWbw.sej5Lru/g//u4We5qagPxleEFsFeJdKN6n.X3R2NORgM8m",
       "id": 2
     }
   ]

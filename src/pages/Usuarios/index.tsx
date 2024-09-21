@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { LayoutDashboard } from "../../components/LayoutDashboard";
 import { IToken } from "../../interfaces/token";
-import { verificaTokenExpirado } from "../../services/token";
+import { validaPermissao, verificaTokenExpirado } from "../../services/token";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -31,6 +31,11 @@ export default function Usuarios() {
             navigate("/")
         }
 
+        if (!validaPermissao(['admin'], token?.user.permissoes))
+        {
+            navigate('/dashboard')
+        }
+
         // trazer os usuários do backend
         axios.get('http://localhost:3001/users')
             .then((res) => {
@@ -44,8 +49,8 @@ export default function Usuarios() {
 
     return(
         <>
+
             <LayoutDashboard>
-                
                 <div
                     className="d-flex justify-content-between mt-3"
                 >
@@ -84,6 +89,9 @@ export default function Usuarios() {
                                                 className="btn btn-warning"
                                                 type="button"
                                                 style={{ marginRight: 5 }}
+                                                onClick={() => {
+                                                    navigate(`/usuarios/${usuario.id}`)
+                                                }}
                                             >
                                                 Editar
                                             </button>

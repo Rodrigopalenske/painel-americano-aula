@@ -1,6 +1,7 @@
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { Link } from "react-router-dom" // Link tag para navegar entre páginas(substitui "a" do html)
-import { excluiToken } from "../../services/token"
+import { excluiToken, validaPermissao } from "../../services/token"
+import { IToken } from "../../interfaces/token"
 
 interface IProps {
     children: ReactNode // tags e componets react, apenas colocando tags, já vai funcionar
@@ -8,6 +9,19 @@ interface IProps {
 
 export const LayoutDashboard = (props: IProps) => {
     
+    const [token, setToken] = useState<IToken>()
+
+    useEffect(() => {
+        let lsToken = localStorage.getItem('americanos.token')
+
+        let token: IToken | undefined
+
+        if (typeof lsToken === 'string') {
+            token = JSON.parse(lsToken)
+            setToken(token)
+        }
+    }, [])
+
     return(
         <>
             <header
@@ -53,14 +67,17 @@ export const LayoutDashboard = (props: IProps) => {
                                         Dashboard
                                     </Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link
-                                        className={`nav-link`}
-                                        to={'/usuarios'}
-                                    >
-                                        Usuários
-                                    </Link>
-                                </li>
+                                {
+                                    validaPermissao(['admin'], token?.user.permissoes) &&
+                                    <li className="nav-item">
+                                        <Link
+                                            className={`nav-link`}
+                                            to={'/usuarios'}
+                                        >
+                                            Usuários
+                                        </Link>
+                                    </li>
+                                }
                                 <li className="nav-item">
                                     <Link
                                         className={`nav-link`}
@@ -72,8 +89,6 @@ export const LayoutDashboard = (props: IProps) => {
                             </ul>
                         </div>
                     </nav>
-
-
                     <main
                         className="col-md-9 ms-sm-auto col-lg-10 px-md-4"
                     >
